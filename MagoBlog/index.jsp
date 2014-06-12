@@ -7,13 +7,13 @@
     <jsp:include page="head.jsp"></jsp:include>
 </head>
 <body>
-<!-- 导航 -->
+<!-- Navigater-->
 <jsp:include page="navigate.jsp"></jsp:include>
-<!-- 导航结束 -->
+<!-- /Navigater -->
 
-<!-- 通知栏 -->
+<!-- Notification -->
 <jsp:include page="header.jsp"></jsp:include>
-<!-- 通知栏结束 -->
+<!-- /Notification -->
 
 <!-- Main Container -->
 <div id="body-wrapper" class="body-wraper-path">
@@ -39,7 +39,9 @@
 <!-- Footer -->
 <jsp:include page="footer.jsp"></jsp:include>
 <!-- /Footer -->
-<div class="backToTop" title="" style="display: block;"></div>
 
+<!-- To Top -->
+<div class="backToTop" title="" style="display: block;"></div>
+<!-- /To Top -->
 </body>
 </html>
