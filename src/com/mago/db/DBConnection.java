@@ -79,6 +79,44 @@ public class DBConnection implements Serializable{
 		return result;
 	}
 	
+	public int queryViewNum(int articleId){
+		int viewNum = 0;
+		String[] field = {"viewNum"};
+		String queryState = SQLStatementQuery.getQuerySpecialField(field) + DBName.getTableName(DBName.ARTICLE_BASE);
+		String condition = " where articleId=" + articleId + ";";
+		try{
+			ResultSet results = stat.executeQuery(queryState + condition);
+			logger.debug("Start get viewNum(articleId="+ articleId +") from " +  DBName.getTableName(DBName.ARTICLE_BASE) + " table!");
+			
+			while(results.next()){			
+				viewNum = results.getInt("viewNum");
+			}
+			
+			logger.debug("End get viewNum(articleId="+ articleId +") from " + DBName.getTableName(DBName.ARTICLE_BASE) + " table!");
+			results.close();
+		}
+		catch(Exception e){
+			logger.error(e.getMessage());
+		}
+		
+		return viewNum;
+	}
+	
+	public boolean updateViewNum(int articleId, int viewNum){
+		String queryState = SQLStatementQuery.update() + DBName.getTableName(DBName.ARTICLE_BASE) + " set viewNum=" + viewNum;
+		String condition = " where articleId=" + articleId;
+		
+		try{
+			stat.executeUpdate(queryState + condition);
+			logger.debug("Update viewNum of the special article(articleId=" + articleId +")!");
+		}catch(Exception e){
+			logger.error(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public Vector<Classe> queryClass(){
 		Vector<Classe> classes = new Vector<Classe>();
 		Classe bean = null;
