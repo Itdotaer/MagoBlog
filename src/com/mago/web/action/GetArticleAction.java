@@ -14,6 +14,7 @@ import org.apache.struts.action.ActionMapping;
 
 import com.mago.base.ExceptionMessage;
 import com.mago.base.SessionOper;
+import com.mago.base.SyncViewNum;
 import com.mago.bean.Article;
 import com.mago.db.DBConnection;
 import com.mago.db.DBConnectionManager;
@@ -34,7 +35,9 @@ public class GetArticleAction extends Action implements Serializable {
 		int articleId = Integer.parseInt(articleIdStr);
 		
 		HttpSession session = request.getSession();
-		ActionForward forward = new ActionForward();;
+		ActionForward forward = new ActionForward();
+		
+		Article article = null;
 		
 		if(!SessionOper.IsContainArticle(session, "article", articleId)){
 			DBConnection conn = DBConnectionManager.getInstance().getConnection();
@@ -49,7 +52,7 @@ public class GetArticleAction extends Action implements Serializable {
 				
 			}else{
 				logger.debug("Get the article according the articleId from DataBase!");
-				Article article = conn.queryArticle(articleId);
+				article = conn.queryArticle(articleId);
 				logger.debug("Successed to get the article from DataBase!");
 				
 				if(SessionOper.IsContain(session, "article")){
@@ -61,7 +64,30 @@ public class GetArticleAction extends Action implements Serializable {
 			}			
 			
 		}else{
+			article = (Article)session.getAttribute("article");
 			forward.setPath("/showDetail.jsp");
+		}
+		
+		if(forward.getPath().equals("/showDetail.jsp")){
+			//Synchronize the viewNum
+			int viewNum = article.getViewNum();
+			SyncViewNum syncViewNumThread = SyncViewNum.getInstance(articleId, viewNum);
+			Thread syncThread = new Thread(syncViewNumThread);
+			syncThread.start();
+			
+			DBConnection conn = DBConnectionManager.getInstance().getConnection();
+			
+			if(conn == null)
+			{
+				logger.error("Cann't create the connection to DataBase!");
+				
+				session.setAttribute("errorMessage", ExceptionMessage.CON_ERROR);
+				
+				forward.setPath("/error.jsp");		
+			}
+			
+			int updatedViewNum = conn.queryViewNum(articleId);
+			session.setAttribute("viewNum", updatedViewNum);
 		}
 		
 		return forward;

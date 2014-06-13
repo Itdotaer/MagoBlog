@@ -1,6 +1,8 @@
 #################
 ## Eclipse
 #################
+# Ignore the released classes
+MagoBlog/WEB-INF/classes/
 
 *.pydevproject
 .project

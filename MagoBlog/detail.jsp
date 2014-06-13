@@ -4,6 +4,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	Article article = (Article)session.getAttribute("article");
+	Object viewNum = session.getAttribute("viewNum");
 %>
 
 <div class="main">
@@ -16,7 +17,7 @@
 			<ul class="post-meta">
 				<li class="author">作者：<a href="javascript:void(0)"><%=article.getPublishedBy() %></a></li>
 				<li class="date"><%=article.getPublishDate() %></li>
-				<li class="comments"><a href="javascript:void(0)">被围观 <%=article.getViewNum() %>次</a></li>
+				<li class="comments"><a href="javascript:void(0)">被围观 <%=viewNum %>次</a></li>
 			</ul>
 			
 			<div class="post-entry">
